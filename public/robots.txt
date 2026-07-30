@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /cart
+
+# Bloquea acceso a rutas administrativas
+Disallow: /admin/
+Disallow: /login
+Disallow: /api/

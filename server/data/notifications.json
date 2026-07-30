@@ -1,0 +1,18 @@
+[
+  {
+    "id": "notif-739bdc08",
+    "title": "Nueva Venta Registrada",
+    "message": "El usuario Luis Villavicencio ha registrado una venta de 1 ítem(s) por un total de S/ 299.00.",
+    "type": "success",
+    "isRead": true,
+    "date": "2026-07-29T22:08:57.685Z"
+  },
+  {
+    "id": "notif-101",
+    "title": "Nueva Venta Registrada",
+    "message": "El usuario Pedro Fernández ha registrado una venta de 1 ítem(s) por un total de S/ 129.99.",
+    "type": "success",
+    "isRead": false,
+    "date": "2026-07-29T10:30:00.000Z"
+  }
+]
