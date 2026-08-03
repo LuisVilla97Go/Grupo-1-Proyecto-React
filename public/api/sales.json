@@ -1,0 +1,37 @@
+[
+  {
+    "items": [
+      {
+        "productId": "prod-2",
+        "name": "Auriculares Inalámbricos Pro",
+        "price": 299,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 253.39,
+    "igv": 45.61,
+    "total": 299,
+    "paymentMethod": "Yape/Plin",
+    "id": "sale-739bdc08",
+    "date": "2026-07-29T22:08:57.685Z",
+    "seller": "Luis Villavicencio"
+  },
+  {
+    "id": "sale-101",
+    "date": "2026-07-29T10:30:00.000Z",
+    "items": [
+      {
+        "productId": "p-101",
+        "name": "Audífonos Inalámbricos Pro Sound",
+        "price": 129.99,
+        "quantity": 1,
+        "category": "Electrónica"
+      }
+    ],
+    "subtotal": 110.16,
+    "igv": 19.83,
+    "total": 129.99,
+    "paymentMethod": "Tarjeta",
+    "seller": "Pedro Fernández"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  { "value": "PEN", "label": "Soles (PEN) - S/", "code": "pe" },
+  { "value": "USD", "label": "Dólares Americanos (USD) - $", "code": "us" },
+  { "value": "EUR", "label": "Euros (EUR) - €", "code": "eu" },
+  { "value": "ARS", "label": "Pesos Argentinos (ARS) - $", "code": "ar" },
+  { "value": "MXN", "label": "Pesos Mexicanos (MXN) - $", "code": "mx" },
+  { "value": "COP", "label": "Pesos Colombianos (COP) - $", "code": "co" },
+  { "value": "CLP", "label": "Pesos Chilenos (CLP) - $", "code": "cl" },
+  { "value": "BRL", "label": "Reales Brasileños (BRL) - R$", "code": "br" }
+]
