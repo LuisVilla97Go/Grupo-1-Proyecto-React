@@ -395,7 +395,7 @@ export default function Sales() {
                                 <div className="py-20 text-center space-y-3">
                                     <Receipt className="w-12 h-12 text-slate-300 mx-auto" />
                                     <p className="text-sm font-bold text-slate-800">Carrito vacío</p>
-                                    <p className="text-xs text-slate-400 max-w-[200px] mx-auto">
+                                    <p className="text-xs text-slate-400 max-w-50 mx-auto">
                                         Selecciona productos a la izquierda para armar la transacción.
                                     </p>
                                 </div>
@@ -425,7 +425,7 @@ export default function Sales() {
                                                     >
                                                         <Minus className="w-3 h-3" />
                                                     </button>
-                                                    <span className="px-2.5 font-bold text-slate-700 min-w-[18px] text-center border-x border-slate-200 h-full flex items-center bg-slate-50">
+                                                    <span className="px-2.5 font-bold text-slate-700 min-w-4.5 text-center border-x border-slate-200 h-full flex items-center bg-slate-50">
                                                         {item.quantity}
                                                     </span>
                                                     <button
@@ -438,7 +438,7 @@ export default function Sales() {
                                                 </div>
 
                                                 {/* Subtotal Item */}
-                                                <span className="font-bold text-xs text-slate-800 min-w-[60px] text-right">
+                                                <span className="font-bold text-xs text-slate-800 min-w-15 text-right">
                                                     {currencySymbol} {(item.price * item.quantity).toFixed(2)}
                                                 </span>
 
@@ -614,7 +614,7 @@ export default function Sales() {
                                                 </td>
 
                                                 {/* Items listados */}
-                                                <td className="px-6 py-4 max-w-[280px]">
+                                                <td className="px-6 py-4 max-w-70">
                                                     <div className="flex flex-col gap-0.5">
                                                         {sale.items.map((item, idx) => (
                                                             <span key={idx} className="text-xs text-slate-600 block">

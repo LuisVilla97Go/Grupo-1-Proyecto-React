@@ -87,9 +87,7 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
     );
 }
 
-// ============================================
 // ESQUEMA DE VALIDACIÓN
-// ============================================
 const settingsSchema = z.object({
     storeName: z.string().min(3, "El nombre de la tienda es obligatorio"),
     ruc: z.string().length(11, "El RUC debe tener exactamente 11 dígitos"),
@@ -160,9 +158,7 @@ export default function Settings() {
     return (
         <div className="space-y-6 max-w-4xl mx-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* ============================================
-            SECCIÓN 1: INFORMACIÓN DE LA TIENDA
-        ============================================ */}
+                {/* SECCIÓN 1: INFORMACIÓN DE LA TIENDA */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                     {/* Header de la card con título a la izquierda y botón a la derecha */}
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
@@ -233,9 +229,7 @@ export default function Settings() {
                     </div>
                 </div>
 
-                {/* ============================================
-            SECCIÓN 2: MONEDA Y LOCALIZACIÓN
-        ============================================ */}
+                {/* SECCIÓN 2: MONEDA Y LOCALIZACIÓN */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
                         <MapPin className="w-5 h-5 text-rose-600" />
@@ -311,9 +305,7 @@ export default function Settings() {
                     </div>
                 </div>
 
-                {/* ============================================
-            SECCIÓN 3: INVENTARIO E IMPUESTOS
-        ============================================ */}
+                {/* SECCIÓN 3: INVENTARIO E IMPUESTOS */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
                         <Package className="w-5 h-5 text-rose-600" />
@@ -374,7 +366,7 @@ export default function Settings() {
                                     {...register("igvPercentage")}
                                     className="w-full px-3 py-2.5 pr-10 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
                                 />
-                                <span className="absolute right-3 top-[34px] text-sm text-slate-500">
+                                <span className="absolute right-3 top-8.5 text-sm text-slate-500">
                                     %
                                 </span>
                             </div>
