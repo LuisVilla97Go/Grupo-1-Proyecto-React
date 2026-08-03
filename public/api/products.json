@@ -1,0 +1,56 @@
+[
+  {
+    "id": "prod-1",
+    "name": "Camiseta Deportiva Elite",
+    "sku": "CAM-DEP-ELITE",
+    "category": "Ropa",
+    "brand": "Nike",
+    "shortDesc": "Camiseta transpirable para alto rendimiento.",
+    "longDesc": "Diseñada para mantenerte fresco durante los entrenamientos más intensos. Fabricada con tecnología que absorbe el sudor.",
+    "price": 89.9,
+    "cost": 45,
+    "comparePrice": 110,
+    "stock": 25,
+    "minStock": 5,
+    "status": "published",
+    "images": [
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    "id": "prod-2",
+    "name": "Auriculares Inalámbricos Pro",
+    "sku": "AUR-IN-PRO",
+    "category": "Electrónica",
+    "brand": "Sony",
+    "shortDesc": "Cancelación de ruido activa y batería de 30 horas.",
+    "longDesc": "Experimenta un sonido envolvente sin interrupciones. Ajuste ergonómico ideal para largas sesiones de uso.",
+    "price": 299,
+    "cost": 150,
+    "comparePrice": 349,
+    "stock": 11,
+    "minStock": 3,
+    "status": "published",
+    "images": [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80"
+    ]
+  },
+  {
+    "id": "prod-3",
+    "name": "Zapatillas Trail Runner",
+    "sku": "ZAP-TR-RUN",
+    "category": "Deportes",
+    "brand": "Adidas",
+    "shortDesc": "Agarre superior en terrenos difíciles.",
+    "longDesc": "Construidas para senderos exigentes con suela de alta tracción y material resistente al agua.",
+    "price": 189.9,
+    "cost": 95,
+    "comparePrice": 220,
+    "stock": 4,
+    "minStock": 5,
+    "status": "draft",
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop&q=80"
+    ]
+  }
+]

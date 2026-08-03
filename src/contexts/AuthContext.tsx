@@ -21,9 +21,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const DEFAULT_USERS: User[] = [
+  { username: "Pfernandez", name: "Pedro Fernández", role: "Administrador" },
+  { username: "Dminaya", name: "Donatto Minaya", role: "Administrador" },
+  {
+    username: "Lvillavicencio",
+    name: "Luis Villavicencio",
+    role: "Administrador",
+  },
+];
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>(DEFAULT_USERS);
   const [loading, setLoading] = useState(true);
 
   // Cargar usuario activo y sembrar lista de usuarios desde la API si no existe en localStorage
@@ -41,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // 2. Fetch users directly from API (source of truth)
       const data = await fetchFromLocalAPI("users.json");
-      if (data) {
+      if (data && Array.isArray(data) && data.length > 0) {
         setUsers(data);
         localStorage.setItem("dash_all_users", JSON.stringify(data));
       } else {
@@ -49,7 +59,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const savedAllUsers = localStorage.getItem("dash_all_users");
         if (savedAllUsers) {
           try {
-            setUsers(JSON.parse(savedAllUsers));
+            const parsed = JSON.parse(savedAllUsers);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setUsers(parsed);
+            }
           } catch {
             // silent
           }
@@ -65,13 +78,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     username: string,
     password: string,
   ): Promise<boolean> => {
-    // Buscar en el estado local de usuarios (que incluye los creados dinámicamente)
-    const foundUser = users.find(
-      (u) => u.username.toLowerCase() === username.trim().toLowerCase(),
+    const inputUser = username.trim().toLowerCase();
+    const inputPass = password.trim().toLowerCase();
+
+    const activeUsers = users.length > 0 ? users : DEFAULT_USERS;
+    const foundUser = activeUsers.find(
+      (u) => u.username.trim().toLowerCase() === inputUser,
     );
 
-    // Contraseña es el mismo username exacto
-    if (foundUser && foundUser.username === password) {
+    // Validar contraseña (el username insensible a mayúsculas/minúsculas)
+    if (foundUser && foundUser.username.trim().toLowerCase() === inputPass) {
       setUser(foundUser);
       localStorage.setItem("dash_user", JSON.stringify(foundUser));
       return true;

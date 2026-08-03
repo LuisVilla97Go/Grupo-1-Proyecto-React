@@ -1,0 +1,74 @@
+[
+  { "group": "América del Sur" },
+  { "value": "America/Lima", "label": "Lima, Perú (GMT-5)", "code": "pe" },
+  {
+    "value": "America/Bogota",
+    "label": "Bogotá, Colombia (GMT-5)",
+    "code": "co"
+  },
+  {
+    "value": "America/Caracas",
+    "label": "Caracas, Venezuela (GMT-4)",
+    "code": "ve"
+  },
+  {
+    "value": "America/La_Paz",
+    "label": "La Paz, Bolivia (GMT-4)",
+    "code": "bo"
+  },
+  {
+    "value": "America/Santiago",
+    "label": "Santiago, Chile (GMT-3)",
+    "code": "cl"
+  },
+  {
+    "value": "America/Argentina/Buenos_Aires",
+    "label": "Buenos Aires, Argentina (GMT-3)",
+    "code": "ar"
+  },
+  {
+    "value": "America/Sao_Paulo",
+    "label": "São Paulo, Brasil (GMT-3)",
+    "code": "br"
+  },
+  { "group": "América del Norte y Central" },
+  {
+    "value": "America/Mexico_City",
+    "label": "Ciudad de México (GMT-6)",
+    "code": "mx"
+  },
+  {
+    "value": "America/Guatemala",
+    "label": "Ciudad de Guatemala (GMT-6)",
+    "code": "gt"
+  },
+  {
+    "value": "America/Costa_Rica",
+    "label": "San José, Costa Rica (GMT-6)",
+    "code": "cr"
+  },
+  {
+    "value": "America/Panama",
+    "label": "Ciudad de Panamá (GMT-5)",
+    "code": "pa"
+  },
+  {
+    "value": "America/New_York",
+    "label": "Nueva York, USA (GMT-5)",
+    "code": "us"
+  },
+  { "group": "Europa" },
+  { "value": "Europe/Madrid", "label": "Madrid, España (GMT+1)", "code": "es" },
+  { "value": "Europe/Paris", "label": "París, Francia (GMT+1)", "code": "fr" },
+  { "value": "Europe/Rome", "label": "Roma, Italia (GMT+1)", "code": "it" },
+  {
+    "value": "Europe/Berlin",
+    "label": "Berlín, Alemania (GMT+1)",
+    "code": "de"
+  },
+  {
+    "value": "Europe/London",
+    "label": "Londres, Reino Unido (GMT+0)",
+    "code": "gb"
+  }
+]
