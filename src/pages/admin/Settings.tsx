@@ -6,9 +6,7 @@ import { Store, MapPin, Package, Save, Receipt, ChevronDown } from "lucide-react
 import { toast } from "sonner";
 import { fetchFromLocalAPI } from "../../services/api";
 
-// ============================================
 // CONFIGURACIÓN DE MONEDAS Y SÍMBOLOS
-// ============================================
 const currencySymbols: Record<string, string> = {
     PEN: "S/",
     USD: "$",
@@ -25,9 +23,7 @@ const formatCurrency = (amount: number, currency: string) => {
     return `${symbol} ${amount.toFixed(2)}`;
 };
 
-// ============================================
 // COMPONENTE SELECT PERSONALIZADO PARA BANDERAS
-// ============================================
 type Option = { value?: string; label?: string; code?: string; group?: string };
 
 function CustomSelect({ options, value, onChange }: { options: Option[], value: string, onChange: (val: string) => void }) {
@@ -54,7 +50,7 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
             >
                 <div className="flex items-center gap-2 text-sm text-slate-800">
                     {selectedOption.code && (
-                        <img src={`https://flagcdn.com/w20/${selectedOption.code}.png`} alt="" className="w-5 h-auto rounded-[2px]" />
+                        <img src={`https://flagcdn.com/w20/${selectedOption.code}.png`} alt="" className="w-5 h-auto rounded-xs" />
                     )}
                     {selectedOption.label}
                 </div>
@@ -80,7 +76,7 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
                                     setIsOpen(false);
                                 }}
                             >
-                                <img src={`https://flagcdn.com/w20/${o.code}.png`} alt="" className="w-5 h-auto rounded-[2px]" />
+                                <img src={`https://flagcdn.com/w20/${o.code}.png`} alt="" className="w-5 h-auto rounded-xs" />
                                 {o.label}
                             </div>
                         );
