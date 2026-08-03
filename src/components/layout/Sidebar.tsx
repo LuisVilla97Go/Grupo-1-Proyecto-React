@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   LayoutDashboard,
@@ -13,6 +13,7 @@ import {
   LogOut,
   Users,
   ShoppingCart,
+  Store,
 } from "lucide-react";
 
 const menuItems = [
@@ -156,18 +157,29 @@ export default function Sidebar({
             )}
           </div>
 
-          <button
-            onClick={() => {
-              logout();
-              if (isMobile && onCloseMobile) {
-                onCloseMobile();
-              }
-            }}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors shrink-0"
-            title="Cerrar sesión"
+          <div
+            className={`flex items-center gap-1 shrink-0 ${isCollapsed && !isMobile ? "flex-col" : ""}`}
           >
-            <LogOut className="w-5 h-5" />
-          </button>
+            <Link
+              to="/"
+              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              title="Ir a la Tienda (Frontend)"
+            >
+              <Store className="w-5 h-5" />
+            </Link>
+            <button
+              onClick={() => {
+                logout();
+                if (isMobile && onCloseMobile) {
+                  onCloseMobile();
+                }
+              }}
+              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              title="Cerrar sesión"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </aside>

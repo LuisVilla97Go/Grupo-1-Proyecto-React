@@ -53,39 +53,51 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const loadStoreData = async () => {
       // 1. Fetch Categories
-      const catData = await fetchFromLocalAPI("categories.json");
-      if (catData) {
-        setCategories(catData);
-        localStorage.setItem("dash_categories", JSON.stringify(catData));
+      const savedCats = localStorage.getItem("dash_categories");
+      if (savedCats && savedCats !== "[]") {
+        setCategories(JSON.parse(savedCats));
       } else {
-        const savedCats = localStorage.getItem("dash_categories");
-        if (savedCats) setCategories(JSON.parse(savedCats));
+        const catData = await fetchFromLocalAPI("categories.json");
+        if (catData) {
+          setCategories(catData);
+          localStorage.setItem("dash_categories", JSON.stringify(catData));
+        }
       }
 
       // 2. Fetch Products
-      const prodData = await fetchFromLocalAPI("products.json");
-      if (prodData) {
-        setProducts(prodData);
-        localStorage.setItem("dash_products", JSON.stringify(prodData));
+      const savedProds = localStorage.getItem("dash_products");
+      if (savedProds && savedProds !== "[]") {
+        setProducts(JSON.parse(savedProds));
       } else {
-        const savedProds = localStorage.getItem("dash_products");
-        if (savedProds) setProducts(JSON.parse(savedProds));
+        const prodData = await fetchFromLocalAPI("products.json");
+        if (prodData) {
+          setProducts(prodData);
+          localStorage.setItem("dash_products", JSON.stringify(prodData));
+        }
       }
 
       // 3. Fetch Sales
-      const salesData = await fetchFromLocalAPI("sales.json");
-      if (salesData) {
-        setSales(salesData);
-        localStorage.setItem("dash_sales", JSON.stringify(salesData));
+      const savedSales = localStorage.getItem("dash_sales");
+      if (savedSales && savedSales !== "[]") {
+        setSales(JSON.parse(savedSales));
       } else {
-        const savedSales = localStorage.getItem("dash_sales");
-        if (savedSales) setSales(JSON.parse(savedSales));
+        const salesData = await fetchFromLocalAPI("sales.json");
+        if (salesData) {
+          setSales(salesData);
+          localStorage.setItem("dash_sales", JSON.stringify(salesData));
+        }
       }
 
       // 4. Fetch Notifications
-      const notifData = await fetchFromLocalAPI("notifications.json");
-      if (notifData) {
-        setNotifications(notifData);
+      const savedNotifs = localStorage.getItem("dash_notifs");
+      if (savedNotifs && savedNotifs !== "[]") {
+        setNotifications(JSON.parse(savedNotifs));
+      } else {
+        const notifData = await fetchFromLocalAPI("notifications.json");
+        if (notifData) {
+          setNotifications(notifData);
+          localStorage.setItem("dash_notifs", JSON.stringify(notifData));
+        }
       }
     };
 
@@ -105,7 +117,15 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addProduct = (product: Omit<Product, "id">) => {
-    const updated = [...products, { ...product, id: crypto.randomUUID() }];
+    const maxId = products.reduce((max, p) => {
+      if (p.id.startsWith("prod-")) {
+        const num = parseInt(p.id.replace("prod-", ""), 10);
+        return !isNaN(num) && num > max ? num : max;
+      }
+      return max;
+    }, 0);
+    const newId = `prod-${maxId + 1}`;
+    const updated = [...products, { ...product, id: newId }];
     saveProducts(updated);
   };
 
@@ -122,9 +142,14 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addCategory = (category: Omit<Category, "id" | "productCount">) => {
+    const maxId = categories.reduce((max, c) => {
+      const num = parseInt(c.id, 10);
+      return !isNaN(num) && num > max ? num : max;
+    }, 0);
+    const newId = String(maxId + 1);
     const updated = [
       ...categories,
-      { ...category, id: crypto.randomUUID(), productCount: 0 },
+      { ...category, id: newId, productCount: 0 },
     ];
     saveCategories(updated);
   };
@@ -195,6 +220,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     };
     const updatedNotifs = [newNotif, ...notifications];
     setNotifications(updatedNotifs);
+    localStorage.setItem("dash_notifs", JSON.stringify(updatedNotifs));
     saveToLocalAPI("save-notifications", updatedNotifs);
   };
 
@@ -203,11 +229,13 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       n.id === id ? { ...n, isRead: true } : n,
     );
     setNotifications(updated);
+    localStorage.setItem("dash_notifs", JSON.stringify(updated));
     saveToLocalAPI("save-notifications", updated);
   };
 
   const clearAllNotifications = () => {
     setNotifications([]);
+    localStorage.setItem("dash_notifs", JSON.stringify([]));
     saveToLocalAPI("save-notifications", []);
   };
 
