@@ -20,4 +20,6 @@ export interface Sale {
   total: number;
   paymentMethod: "Efectivo" | "Tarjeta" | "Yape/Plin" | "Contraentrega";
   seller: string;
+  customerName?: string;
+  deliveryAddress?: string;
 }
