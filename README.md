@@ -109,19 +109,7 @@ c:\dash_tienda/
 │       ├── products.json
 │       ├── sales.json
 │       └── users.json
-├── skills/                       # Sistema de Inteligencia y Guías de IA
-│   ├── architecture/             # Guía de arquitectura y rutas
-│   ├── clean-code/              # Reglas de Clean Code y refactorización
-│   ├── devsecops/                # Seguridad y protección de datos
-│   ├── frontend/                 # Estándares de React 19 + TypeScript
-│   ├── local-db/                 # Guía de Vite Middleware (Micro-backend)
-│   ├── modern-updates/           # Protocolo de actualizaciones y patrones modernos
-│   ├── package-manager/          # Uso obligatorio de pnpm
-│   ├── qa-testing/               # Protocolo de pruebas de UI y flujos
-│   ├── SEO/                      # Optimización SEO y accesibilidad
-│   ├── skill-creation/           # Meta-skill para redactar nuevas guías
-│   ├── ui-ux/                    # Diseño premium y responsivo
-│   └── SKILL.md                  # Orquestador Maestro de la IA
+│
 ├── src/                          # Código fuente principal de la aplicación
 │   ├── components/               # Componentes visuales reutilizables
 │   │   ├── charts/               # Gráficos encapsulados de Recharts
