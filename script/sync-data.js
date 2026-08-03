@@ -8,6 +8,13 @@ const __dirname = path.dirname(__filename);
 const sourceDir = path.resolve(__dirname, "../server/data");
 const destDir = path.resolve(__dirname, "../public/api");
 
+if (!fs.existsSync(sourceDir)) {
+  console.warn(
+    `[Sync] Warning: Source directory ${sourceDir} not found. Skipping sync.`,
+  );
+  process.exit(0);
+}
+
 if (!fs.existsSync(destDir)) {
   fs.mkdirSync(destDir, { recursive: true });
 }
