@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "name": "Electrónica",
+    "description": "Dispositivos y gadgets",
+    "productCount": 0
+  },
+  {
+    "id": "2",
+    "name": "Ropa",
+    "description": "Vestimenta y accesorios",
+    "productCount": 0
+  },
+  {
+    "id": "3",
+    "name": "Deportes",
+    "description": "Equipamiento deportivo",
+    "productCount": 0
+  },
+  {
+    "id": "4",
+    "name": "Hogar",
+    "description": "Artículos para el hogar",
+    "productCount": 0
+  },
+  {
+    "id": "5",
+    "name": "Accesorios",
+    "description": "Complementos varios",
+    "productCount": 0
+  }
+]
