@@ -303,38 +303,25 @@ export default function CartFront() {
 
                 {/* Selección de Método de Pago */}
                 <div className="mb-6">
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">
-                    Método de Pago
-                  </label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Método de Pago</label>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {[
                       { id: "Efectivo", icon: Banknote },
                       { id: "Tarjeta", icon: CreditCard },
                       { id: "Yape/Plin", icon: QrCode },
-                      { id: "Contraentrega", icon: Truck },
+                      { id: "Contraentrega", icon: Truck }
                     ].map((method) => {
                       const Icon = method.icon;
                       return (
                         <button
                           key={method.id}
-                          onClick={() =>
-                            setPaymentMethod(
-                              method.id as
-                                | "Efectivo"
-                                | "Tarjeta"
-                                | "Yape/Plin"
-                                | "Contraentrega",
-                            )
-                          }
-                          className={`flex flex-col items-center justify-center py-4 px-2 gap-2 text-xs font-semibold border rounded-xl transition ${
-                            paymentMethod === method.id
-                              ? "bg-rose-50 border-rose-400 text-rose-700 shadow-sm"
-                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
-                          }`}
+                          onClick={() => setPaymentMethod(method.id as "Efectivo" | "Tarjeta" | "Yape/Plin" | "Contraentrega")}
+                          className={`flex flex-col items-center justify-center py-4 px-2 gap-2 text-xs font-semibold border rounded-xl transition ${paymentMethod === method.id
+                            ? "bg-rose-50 border-rose-400 text-rose-700 shadow-sm"
+                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                            }`}
                         >
-                          <Icon
-                            className={`w-5 h-5 ${paymentMethod === method.id ? "text-rose-600" : "text-slate-400"}`}
-                          />
+                          <Icon className={`w-5 h-5 ${paymentMethod === method.id ? 'text-rose-600' : 'text-slate-400'}`} />
                           {method.id}
                         </button>
                       );
