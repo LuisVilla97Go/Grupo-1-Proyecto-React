@@ -216,8 +216,8 @@ export default function Sales() {
                     <button
                         onClick={() => setActiveTab("pos")}
                         className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${activeTab === "pos"
-                                ? "bg-rose-50 text-rose-600 border-rose-200"
-                                : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
+                            ? "bg-rose-50 text-rose-600 border-rose-200"
+                            : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
                             }`}
                     >
                         <ShoppingCart className="w-4 h-4" />
@@ -226,8 +226,8 @@ export default function Sales() {
                     <button
                         onClick={() => setActiveTab("history")}
                         className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${activeTab === "history"
-                                ? "bg-rose-50 text-rose-600 border-rose-200"
-                                : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
+                            ? "bg-rose-50 text-rose-600 border-rose-200"
+                            : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
                             }`}
                     >
                         <Receipt className="w-4 h-4" />
@@ -259,8 +259,8 @@ export default function Sales() {
                                 <button
                                     onClick={() => setSelectedCategory("all")}
                                     className={`px-4 py-2 rounded-xl text-xs font-extrabold tracking-wide transition whitespace-nowrap ${selectedCategory === "all"
-                                            ? "bg-rose-600 text-white shadow-sm"
-                                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                        ? "bg-rose-600 text-white shadow-sm"
+                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                         }`}
                                 >
                                     Todas ({publishedProducts.length})
@@ -272,8 +272,8 @@ export default function Sales() {
                                             key={cat.id}
                                             onClick={() => setSelectedCategory(cat.name)}
                                             className={`px-4 py-2 rounded-xl text-xs font-extrabold tracking-wide transition whitespace-nowrap ${selectedCategory === cat.name
-                                                    ? "bg-rose-600 text-white shadow-sm"
-                                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                                ? "bg-rose-600 text-white shadow-sm"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                                 }`}
                                         >
                                             {cat.name} ({count})
@@ -305,8 +305,8 @@ export default function Sales() {
                                             key={product.id}
                                             onClick={() => !isOutOfStock && addToCart(product)}
                                             className={`bg-white rounded-2xl border p-4 flex flex-col justify-between transition-all duration-300 shadow-sm ${isOutOfStock
-                                                    ? "border-slate-100 opacity-60 cursor-not-allowed"
-                                                    : "border-slate-200 hover:border-rose-300 hover:shadow-md cursor-pointer hover:scale-[1.01]"
+                                                ? "border-slate-100 opacity-60 cursor-not-allowed"
+                                                : "border-slate-200 hover:border-rose-300 hover:shadow-md cursor-pointer hover:scale-[1.01]"
                                                 }`}
                                         >
                                             <div>
@@ -359,8 +359,8 @@ export default function Sales() {
                                                     type="button"
                                                     disabled={isOutOfStock || isCartLimit}
                                                     className={`w-7 h-7 rounded-full transition-colors flex items-center justify-center text-white ${isOutOfStock || isCartLimit
-                                                            ? "bg-slate-100 text-slate-300 cursor-not-allowed"
-                                                            : "bg-rose-600 hover:bg-rose-700 active:scale-95"
+                                                        ? "bg-slate-100 text-slate-300 cursor-not-allowed"
+                                                        : "bg-rose-600 hover:bg-rose-700 active:scale-95"
                                                         }`}
                                                 >
                                                     <Plus className="w-4.5 h-4.5" />
@@ -478,8 +478,8 @@ export default function Sales() {
                                                 type="button"
                                                 onClick={() => setPaymentMethod(method.id as "Efectivo" | "Tarjeta" | "Yape/Plin")}
                                                 className={`flex flex-col items-center gap-1.5 py-2.5 rounded-xl border transition-all ${isSelected
-                                                        ? "bg-rose-50 border-rose-500 text-rose-600 font-bold"
-                                                        : "bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800"
+                                                    ? "bg-rose-50 border-rose-500 text-rose-600 font-bold"
+                                                    : "bg-white border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800"
                                                     }`}
                                             >
                                                 <Icon className="w-4 h-4" />
