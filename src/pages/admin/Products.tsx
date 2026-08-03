@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 
 export default function Products() {
-  const { products, deleteProduct } = useStore();
+  const { products, deleteProduct, addProduct } = useStore();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -308,8 +308,14 @@ export default function Products() {
                         </button>
                         <button
                           onClick={() => {
-                            toast.info("Producto duplicado");
-                            // Lógica de duplicar aquí
+                            const { id, ...productCopy } = product;
+                            productCopy.name = `${product.name} (Copia)`;
+                            productCopy.sku = `${product.sku}-COPY`;
+                            productCopy.status = "draft";
+                            addProduct(productCopy);
+                            toast.success(
+                              `Producto "${product.name}" duplicado con éxito`,
+                            );
                           }}
                           className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition"
                           title="Duplicar"
