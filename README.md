@@ -39,7 +39,7 @@ Para evaluar el sistema administrativo y el Punto de Venta (POS), acceda a trav�
 
 ### 1. Tienda Virtual (E-commerce)
 
-- **Catálogo Dinámico:** Renderizado automático de productos activos (`status === "published"`) con sistema de filtrado por categoría y barra de búsqueda reactiva.
+- **Catálogo Dinámico y Precios de Oferta:** Renderizado automático de productos activos (`status === "published"`). Soporte nativo para "Precios Comparativos" (descuentos visuales tachados) manteniendo en privado el verdadero costo operativo del producto.
 - **Experiencia de Compra (Cart & Checkout):** Layout premium a dos columnas con un resumen de carrito inteligente (sticky). Incluye una pasarela de pago simulada que soporta múltiples métodos (Efectivo, Tarjeta, Yape/Plin, Contraentrega) mediante flujos modales interactivos.
 - **Sincronización Transaccional:** Los pedidos realizados en la web impactan instantáneamente el inventario y se registran en el panel administrativo bajo la auditoría de **`Cliente Web / Ecommerce`**.
 
@@ -48,7 +48,7 @@ Para evaluar el sistema administrativo y el Punto de Venta (POS), acceda a trav�
 - **Dashboard Financiero:** Módulo de resumen con métricas clave del negocio y gráficos interactivos de ingresos por categoría y métodos de pago.
 - **Punto de Venta (POS) Físico Rediseñado:** Panel de compras en vivo para sucursales físicas. Cuenta con un indicador de cantidad agregada sobre la foto de cada producto y alertas visuales de "Poco Stock".
 - **Gestión de Caja en Tiempo Real:** Métricas agregadas al instante que muestran el **Total Recaudado**, **Ventas Procesadas** y el **Ticket Promedio** de la sesión.
-- **Trazabilidad de Ventas:** Identificadores únicos de venta formateados con hashtag (ej: `#v-1490`) que incluyen el desglose completo de productos adquiridos.
+- **Trazabilidad de Ventas e IDs Secuenciales:** El sistema de persistencia genera **IDs secuenciales predecibles** (`prod-4`, `5`) en lugar de UUIDs aleatorios, manteniendo limpia la estructura de la base de datos simulada. Las ventas poseen identificadores únicos formateados con hashtag (ej: `#sale-739bdc08`) que incluyen el desglose completo de productos adquiridos.
 - **Seguridad Perimetral:** Ruta protegida mediante el `AuthContext`. Redirección automática a `/login` ante intentos de acceso sin sesión activa.
 
 ### 3. Sistema de Notificaciones en Tiempo Real
@@ -98,6 +98,8 @@ c:\dash_tienda/
 ├── public/                       # Archivos estáticos servidos por Vite
 │   ├── api/                      # Archivos JSON leídos por el cliente (GET)
 │   └── favicon.svg
+├── scripts/                      # Scripts de automatización (sincronización de datos)
+│   └── sync-data.js
 ├── server/
 │   └── data/                     # Base de Datos Local Física (DevSecOps)
 │       ├── categories.json
@@ -126,7 +128,7 @@ c:\dash_tienda/
 │   │   └── TemplateModal.tsx     # Modal genérico estandarizado
 │   ├── contexts/                 # Manejo de Estado Global (Context API)
 │   │   ├── AuthContext.tsx       # Sesiones, autenticación y seguridad
-│   │   └── StoreContext.tsx      # Inventario, carrito y transacciones
+│   │   └── StoreContext.tsx      # Inventario, carrito, transacciones y generador de IDs secuenciales
 │   ├── pages/                    # Vistas y pantallas divididas por dominio
 │   │   ├── admin/                # Panel de Control y POS Privado B2B
 │   │   ├── auth/                 # Autenticación de personal
@@ -140,6 +142,7 @@ c:\dash_tienda/
 ├── eslint.config.js              # Reglas del linter
 ├── package.json                  # Dependencias y scripts
 ├── README.md                     # Documentación oficial del proyecto
+├── vercel.json                   # Configuración SPA infalible para Vercel
 └── vite.config.ts                # Configuración de Vite + Middleware local
 ```
 
