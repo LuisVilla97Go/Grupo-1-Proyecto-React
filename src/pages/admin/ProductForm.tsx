@@ -309,20 +309,45 @@ export default function ProductForm() {
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Estado <span className="text-red-500">*</span>
+                  Visibilidad del Producto{" "}
+                  <span className="text-red-500">*</span>
                 </label>
-                <select
-                  {...register("status")}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 bg-white ${
-                    errors.status ? "border-red-500" : "border-slate-200"
-                  }`}
-                >
-                  <option value="published">
-                    🟢 Publicado (Visible en tienda)
-                  </option>
-                  <option value="draft">🟡 Borrador (Oculto)</option>
-                </select>
-                <p className="text-xs text-slate-500 mt-1">
+                <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg bg-white">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setValue(
+                        "status",
+                        watch("status") === "published" ? "draft" : "published",
+                        { shouldValidate: true },
+                      )
+                    }
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 ${
+                      watch("status") === "published"
+                        ? "bg-green-500"
+                        : "bg-slate-300"
+                    }`}
+                    role="switch"
+                    aria-checked={watch("status") === "published"}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        watch("status") === "published"
+                          ? "translate-x-5"
+                          : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                  <span
+                    className={`text-sm font-medium ${watch("status") === "published" ? "text-green-600" : "text-slate-500"}`}
+                  >
+                    {watch("status") === "published"
+                      ? "Publicado (Visible en tienda)"
+                      : "Borrador (Oculto)"}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
                   Los borradores no aparecerán en la tienda virtual hasta que
                   los publiques.
                 </p>
