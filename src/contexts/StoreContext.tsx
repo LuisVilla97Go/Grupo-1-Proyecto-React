@@ -99,6 +99,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem("dash_notifs", JSON.stringify(notifData));
         }
       }
+
+      // 5. Fetch Cart
+      const savedCart = localStorage.getItem("dash_cart");
+      if (savedCart) {
+        setCart(JSON.parse(savedCart));
+      }
     };
 
     loadStoreData();
@@ -114,6 +120,11 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     setCategories(newCategories);
     localStorage.setItem("dash_categories", JSON.stringify(newCategories));
     saveToLocalAPI("save-categories", newCategories);
+  };
+
+  const saveCart = (newCart: CartItem[]) => {
+    setCart(newCart);
+    localStorage.setItem("dash_cart", JSON.stringify(newCart));
   };
 
   const addProduct = (product: Omit<Product, "id">) => {
@@ -260,7 +271,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       }
       const updatedCart = [...cart];
       updatedCart[existingIndex].quantity += 1;
-      setCart(updatedCart);
+      saveCart(updatedCart);
       toast.success(`Incrementado en el carrito: "${product.name}".`);
     } else {
       const newItem: CartItem = {
@@ -275,7 +286,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
             ? product.images[0]
             : undefined,
       };
-      setCart([...cart, newItem]);
+      saveCart([...cart, newItem]);
       toast.success(`"${product.name}" agregado al carrito.`);
     }
   };
@@ -300,16 +311,16 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       })
       .filter(Boolean) as CartItem[];
 
-    setCart(updatedCart);
+    saveCart(updatedCart);
   };
 
   const removeFromCart = (productId: string, name: string) => {
-    setCart(cart.filter((item) => item.productId !== productId));
+    saveCart(cart.filter((item) => item.productId !== productId));
     toast.info(`"${name}" removido de la bolsa.`);
   };
 
   const clearCart = () => {
-    setCart([]);
+    saveCart([]);
   };
 
   return (

@@ -41,14 +41,16 @@ Para evaluar el sistema administrativo y el Punto de Venta (POS), acceda a trav�
 
 - **Catálogo Dinámico y Precios de Oferta:** Renderizado automático de productos activos (`status === "published"`). Soporte nativo para "Precios Comparativos" (descuentos visuales tachados) manteniendo en privado el verdadero costo operativo del producto.
 - **Experiencia de Compra (Cart & Checkout):** Layout premium a dos columnas con un resumen de carrito inteligente (sticky). Incluye una pasarela de pago simulada que soporta múltiples métodos (Efectivo, Tarjeta, Yape/Plin, Contraentrega) mediante flujos modales interactivos.
-- **Sincronización Transaccional:** Los pedidos realizados en la web impactan instantáneamente el inventario y se registran en el panel administrativo bajo la auditoría de **`Cliente Web / Ecommerce`**.
+- **Logística "Contraentrega" Integrada:** Cuando un cliente selecciona pago Contraentrega, el sistema requiere obligatoriamente capturar sus **Datos de Envío** (Nombre y Dirección exacta), información que viaja directamente al panel del administrador para procesar el despacho.
+- **Sincronización Transaccional:** Los pedidos realizados en la web impactan instantáneamente el inventario y se registran en el panel administrativo bajo la auditoría de **`Cliente Web / Ecommerce`**. Todo el carrito de compras es persistente, evitando pérdidas de información ante recargas accidentales.
 
 ### 2. Panel de Gestión Integral (`/admin`)
 
 - **Dashboard Financiero:** Módulo de resumen con métricas clave del negocio y gráficos interactivos de ingresos por categoría y métodos de pago.
 - **Punto de Venta (POS) Físico Rediseñado:** Panel de compras en vivo para sucursales físicas. Cuenta con un indicador de cantidad agregada sobre la foto de cada producto y alertas visuales de "Poco Stock".
-- **Gestión de Caja en Tiempo Real:** Métricas agregadas al instante que muestran el **Total Recaudado**, **Ventas Procesadas** y el **Ticket Promedio** de la sesión.
+- **Gestión de Caja en Tiempo Real:** Métricas agregadas al instante que muestran el **Total Recaudado**, **Ventas Procesadas** y el **Ticket Promedio** de la sesión. El historial de ventas muestra claramente la dirección de entrega de los pedidos web.
 - **Trazabilidad de Ventas e IDs Secuenciales:** El sistema de persistencia genera **IDs secuenciales predecibles** (`prod-4`, `5`) en lugar de UUIDs aleatorios, manteniendo limpia la estructura de la base de datos simulada. Las ventas poseen identificadores únicos formateados con hashtag (ej: `#sale-739bdc08`) que incluyen el desglose completo de productos adquiridos.
+- **Clonación Rápida de Inventario:** Capacidad de duplicar productos existentes con un solo clic. El clon genera automáticamente un nuevo SKU único y se establece en modo "Borrador" por seguridad, acelerando la carga masiva de catálogos.
 - **Seguridad Perimetral:** Ruta protegida mediante el `AuthContext`. Redirección automática a `/login` ante intentos de acceso sin sesión activa.
 
 ### 3. Sistema de Notificaciones en Tiempo Real
@@ -62,13 +64,13 @@ Para evaluar el sistema administrativo y el Punto de Venta (POS), acceda a trav�
 - **Arquitectura Limpia (Clean Architecture):** Lógica de negocio e interfaces (UI) estrictamente separadas. Por ejemplo, los gráficos complejos y las analíticas están aisladas en la carpeta `src/components/charts/` para evitar la sobrecarga del código del Dashboard.
 - **Prevención de Errores (Doble Submit):** Formularios y modales protegidos contra envíos múltiples accidentales mediante estados bloqueantes y feedback visual interactivo (spinners).
 - **Optimización de Renderizado:** Uso avanzado de memoización (`useMemo`) para el cálculo de grandes volúmenes de datos en las tablas de inventario y balances financieros, asegurando transiciones instantáneas sin "lag".
-- **Diseño 100% Responsivo:** Interfaz adaptable a cualquier dispositivo móvil. Incluye una barra de navegación lateral colapsable para escritorio y un menú tipo _Drawer_ deslizable para celulares y tablets.
+- **Diseño 100% Responsivo:** Interfaz adaptable a cualquier dispositivo móvil. Incluye una barra de navegación lateral colapsable para escritorio, atajos rápidos entre tienda y panel, y un menú tipo _Drawer_ deslizable para celulares y tablets.
 
-### 5. Base de Datos Local Física (Vite Middleware)
+### 5. Base de Datos Local Física y Compatibilidad Serverless (Vercel)
 
 - El servidor de desarrollo de Vite fue configurado y extendido para actuar como un **micro-backend local**, interceptando las llamadas de guardado (`/api/save-*`).
 - Esta innovación permite modificar físicamente y en tiempo real los archivos `.json` ubicados en `public/api/` (agregando, editando o eliminando productos, categorías o transacciones), **cumpliendo estrictamente con el requisito de consumo de APIs externas**.
-- El sistema es "Production-ready": Si se despliega como frontend estático en plataformas en la nube, el sistema detecta el entorno y cambia su comportamiento automáticamente para guardar en el `localStorage`, garantizando que la aplicación nunca se rompa.
+- El sistema es "Production-ready" e "Inmortal": Si se despliega como frontend estático en plataformas en la nube sin sistema de archivos (como **Vercel**), la capa de persistencia prioriza automáticamente el `localStorage`, garantizando sincronización en tiempo real entre el POS y el E-commerce, sin sufrir pérdida de datos al recargar la página.
 
 ---
 
@@ -190,7 +192,7 @@ Manejo de la memoria viva de la aplicación utilizando la API Context nativa (su
 
 #### 🏷️ `src/types/` (Contratos TypeScript)
 
-- `product.ts`, `sale.ts`, `user.ts`: Definen las "Interfaces" (la forma exacta que deben tener los datos). Evita errores de variables "undefined" o campos faltantes (por ejemplo, obliga a que una `Sale` tenga un `total` de tipo `number`).
+- `product.ts`, `sale.ts`, `user.ts`, `notification.ts`: Definen las "Interfaces" (la forma exacta que deben tener los datos). Evita errores de variables "undefined" o campos faltantes (por ejemplo, obliga a que una `Sale` tenga un `total` de tipo `number`).
 - `index.ts`: Archivo barril (Barrel File) para exportar de forma limpia todos los tipos de golpe.
 
 #### 🖥️ `src/pages/` (Vistas / Rutas Principales)
