@@ -261,8 +261,8 @@ export default function CartFront() {
                                                     key={method.id}
                                                     onClick={() => setPaymentMethod(method.id as "Efectivo" | "Tarjeta" | "Yape/Plin" | "Contraentrega")}
                                                     className={`flex flex-col items-center justify-center py-4 px-2 gap-2 text-xs font-semibold border rounded-xl transition ${paymentMethod === method.id
-                                                            ? "bg-rose-50 border-rose-400 text-rose-700 shadow-sm"
-                                                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                                                        ? "bg-rose-50 border-rose-400 text-rose-700 shadow-sm"
+                                                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                                                         }`}
                                                 >
                                                     <Icon className={`w-5 h-5 ${paymentMethod === method.id ? 'text-rose-600' : 'text-slate-400'}`} />
@@ -316,7 +316,7 @@ export default function CartFront() {
 
             {/* MODAL DE CONFIRMACIÓN */}
             {showConfirmModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-100 flex items-center justify-center p-4 animate-in fade-in duration-200">
                     <div
                         onClick={() => setShowConfirmModal(false)}
                         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
