@@ -3,3 +3,4 @@ export type { Category } from "./category";
 export type { User } from "./user";
 export type { Sale, SaleItem, CartItem } from "./sale";
 export type { Notification } from "./notification";
+export type { StoreSettings } from "./settings";

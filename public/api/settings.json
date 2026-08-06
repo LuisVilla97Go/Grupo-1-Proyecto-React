@@ -1,0 +1,10 @@
+{
+  "storeName": "Mi Tienda Perú",
+  "ruc": 20123456789,
+  "email": "contacto@mitienda.pe",
+  "timezone": "America/Lima",
+  "currency": "PEN",
+  "minStockThreshold": 5,
+  "includeIgv": true,
+  "igvPercentage": 18
+}

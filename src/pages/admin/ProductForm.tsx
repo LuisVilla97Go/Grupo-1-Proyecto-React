@@ -23,8 +23,20 @@ import {
 import { toast } from "sonner";
 
 const productSchema = z.object({
-  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
-  sku: z.string().min(3, "El SKU es obligatorio"),
+  name: z.string()
+    .refine((val) => val.length > 0 && val.trim().length === 0 ? false : true, "El nombre no puede ser espacios vacios")
+    .refine((val) => val.length === 0 || val.trim().length > 0, "El nombre es obligatorio")
+    .refine((val) => !/^\s/.test(val) && !/\s$/.test(val), "El nombre no puede comenzar ni terminar con espacios")
+    .refine((val) => val.length >= 10, "El nombre debe tener al menos 10 caracteres")
+    .refine(
+      (val) => (val.match(/[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/g) || []).length >= 10,
+      "El nombre debe contener al menos 10 letras"
+    ),
+  sku: z.string()
+    .refine((val) => val.length > 0 && val.trim().length === 0 ? false : true, "El SKU no puede ser espacios vacios")
+    .refine((val) => val.length === 0 || val.trim().length > 0, "El SKU es obligatorio")
+    .refine((val) => !/^\s/.test(val) && !/\s$/.test(val), "El SKU no puede comenzar ni terminar con espacios")
+    .regex(/^[a-zA-Z0-9-]+$/, "El SKU solo puede contener letras, números y guiones"),
   category: z.string().min(2, "La categoría es obligatoria"),
   brand: z.string().optional(),
   shortDesc: z.string().optional(),
@@ -113,10 +125,7 @@ export default function ProductForm() {
     const name = watch("name");
     const catPrefix = cat ? cat.substring(0, 3).toUpperCase() : "PROD";
     const nameClean = name
-      ? name
-          .replace(/[^a-zA-Z0-9]/g, "")
-          .substring(0, 3)
-          .toUpperCase()
+      ? name.replace(/[^a-zA-Z0-9]/g, "").substring(0, 3).toUpperCase()
       : "ITEM";
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const newSku = `${catPrefix}-${nameClean}-${randomNum}`;
@@ -157,9 +166,7 @@ export default function ProductForm() {
       }
       navigate("/admin/products");
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Ocurrió un error al guardar",
-      );
+      toast.error(err instanceof Error ? err.message : "Ocurrió un error al guardar");
     } finally {
       setIsSaving(false);
     }
@@ -211,11 +218,10 @@ export default function ProductForm() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${
-                activeTab === tab.id
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap ${activeTab === tab.id
                   ? "bg-white text-rose-600 shadow-sm"
                   : "text-slate-600 hover:bg-slate-100"
-              }`}
+                }`}
             >
               <tab.icon className="w-4 h-4" />
               {tab.label}
@@ -238,9 +244,8 @@ export default function ProductForm() {
                 <input
                   {...register("name")}
                   placeholder="Ej: Camiseta Deportiva Premium"
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${
-                    errors.name ? "border-red-500" : "border-slate-200"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.name ? "border-red-500" : "border-slate-200"
+                    }`}
                 />
                 {errors.name && (
                   <p className="text-xs text-red-500 mt-1">
@@ -255,9 +260,8 @@ export default function ProductForm() {
                 </label>
                 <select
                   {...register("category")}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 bg-white ${
-                    errors.category ? "border-red-500" : "border-slate-200"
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 bg-white ${errors.category ? "border-red-500" : "border-slate-200"
+                    }`}
                 >
                   <option value="">Seleccionar categoría</option>
                   {categories.map((cat) => (
@@ -309,47 +313,29 @@ export default function ProductForm() {
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Visibilidad del Producto{" "}
-                  <span className="text-red-500">*</span>
+                  Visibilidad del Producto <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg bg-white">
                   <button
                     type="button"
-                    onClick={() =>
-                      setValue(
-                        "status",
-                        watch("status") === "published" ? "draft" : "published",
-                        { shouldValidate: true },
-                      )
-                    }
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 ${
-                      watch("status") === "published"
-                        ? "bg-green-500"
-                        : "bg-slate-300"
-                    }`}
+                    onClick={() => setValue("status", watch("status") === "published" ? "draft" : "published", { shouldValidate: true })}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 ${watch("status") === "published" ? 'bg-green-500' : 'bg-slate-300'
+                      }`}
                     role="switch"
                     aria-checked={watch("status") === "published"}
                   >
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        watch("status") === "published"
-                          ? "translate-x-5"
-                          : "translate-x-0"
-                      }`}
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${watch("status") === "published" ? 'translate-x-5' : 'translate-x-0'
+                        }`}
                     />
                   </button>
-                  <span
-                    className={`text-sm font-medium ${watch("status") === "published" ? "text-green-600" : "text-slate-500"}`}
-                  >
-                    {watch("status") === "published"
-                      ? "Publicado (Visible en tienda)"
-                      : "Borrador (Oculto)"}
+                  <span className={`text-sm font-medium ${watch("status") === "published" ? "text-green-600" : "text-slate-500"}`}>
+                    {watch("status") === "published" ? "Publicado (Visible en tienda)" : "Borrador (Oculto)"}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-2">
-                  Los borradores no aparecerán en la tienda virtual hasta que
-                  los publiques.
+                  Los borradores no aparecerán en la tienda virtual hasta que los publiques.
                 </p>
               </div>
             </div>
@@ -389,9 +375,8 @@ export default function ProductForm() {
                       type="number"
                       step="0.01"
                       {...register("price")}
-                      className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${
-                        errors.price ? "border-red-500" : "border-slate-200"
-                      }`}
+                      className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.price ? "border-red-500" : "border-slate-200"
+                        }`}
                     />
                   </div>
                 </div>
@@ -499,11 +484,10 @@ export default function ProductForm() {
                           ? "Generado automáticamente..."
                           : "Ej: CAM-ROJ-M"
                       }
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition ${
-                        isAutoSku
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition ${isAutoSku
                           ? "bg-slate-50 text-slate-700 font-mono pr-10"
                           : "bg-white"
-                      } ${errors.sku ? "border-red-500" : "border-slate-200"}`}
+                        } ${errors.sku ? "border-red-500" : "border-slate-200"}`}
                     />
                     {isAutoSku && (
                       <button
@@ -530,9 +514,8 @@ export default function ProductForm() {
                   <input
                     type="number"
                     {...register("stock")}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${
-                      errors.stock ? "border-red-500" : "border-slate-200"
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.stock ? "border-red-500" : "border-slate-200"
+                      }`}
                   />
                 </div>
               </div>
@@ -634,11 +617,7 @@ export default function ProductForm() {
             onClick={handleSubmit(onSubmit)}
             className="px-6 py-2.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-medium flex items-center gap-2 transition shadow-lg shadow-rose-600/20 disabled:opacity-70 disabled:pointer-events-none"
           >
-            {isSaving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {isSaving ? "Guardando..." : "Guardar Producto"}
           </button>
         </div>
