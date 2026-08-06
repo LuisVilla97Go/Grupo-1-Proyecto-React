@@ -24,6 +24,15 @@ export default function Users() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (/^\s/.test(name) || /\s$/.test(name)) {
+            toast.error("El nombre no puede comenzar ni terminar con espacios.");
+            return;
+        }
+        if (/^\s/.test(username) || /\s$/.test(username)) {
+            toast.error("El nombre de usuario no puede comenzar ni terminar con espacios.");
+            return;
+        }
+
         if (!name.trim() || !username.trim()) {
             toast.error("Por favor completa el nombre y el usuario.");
             return;
@@ -103,34 +112,36 @@ export default function Users() {
                         <div
                             key={u.username}
                             className={`bg-white rounded-2xl border p-5 flex flex-col justify-between transition-all duration-300 hover:shadow-lg ${isSelf
-                                ? "border-rose-300 ring-1 ring-rose-100 bg-rose-50/10"
-                                : "border-slate-200"
+                                    ? "border-rose-300 ring-1 ring-rose-100 bg-rose-50/10"
+                                    : "border-slate-200"
                                 }`}
                         >
                             <div>
                                 {/* Cabecera Tarjeta */}
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-full bg-linear-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className="w-12 h-12 shrink-0 rounded-full bg-linear-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
                                             {u.name.charAt(0)}
                                         </div>
-                                        <div>
+                                        <div className="min-w-0">
                                             <h3 className="font-bold text-slate-800 flex items-center gap-1.5">
-                                                {u.name}
+                                                <span className="truncate">{u.name}</span>
                                                 {isSelf && (
-                                                    <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-semibold">
+                                                    <span className="shrink-0 text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-semibold">
                                                         Tú
                                                     </span>
                                                 )}
                                             </h3>
-                                            <p className="text-xs text-slate-500 font-mono mt-0.5">
+                                            <p className="text-xs text-slate-500 font-mono mt-0.5 truncate">
                                                 @{u.username}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-full text-slate-600 text-xs font-semibold">
-                                        <Shield className="w-3.5 h-3.5" />
-                                        {u.role}
+                                    <div className="flex">
+                                        <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md text-slate-600 text-xs font-semibold">
+                                            <Shield className="w-3.5 h-3.5" />
+                                            {u.role}
+                                        </div>
                                     </div>
                                 </div>
 
