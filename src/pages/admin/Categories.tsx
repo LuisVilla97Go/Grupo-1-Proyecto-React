@@ -58,15 +58,32 @@ export default function Categories() {
 
     const validateForm = () => {
         const newErrors: { name?: string } = {};
-        if (!formData.name.trim()) {
+        const rawName = formData.name;
+        const trimmed = rawName.trim();
+
+        if (rawName.length > 0 && trimmed.length === 0) {
+            newErrors.name = "El nombre no puede ser espacios vacios";
+        } else if (rawName.length === 0) {
             newErrors.name = "El nombre de la categoría es obligatorio";
-        } else if (formData.name.length < 3) {
+        } else if (/^\s/.test(rawName) || /\s$/.test(rawName)) {
+            newErrors.name = "El nombre no puede comenzar ni terminar con espacios";
+        } else if (trimmed.length < 3) {
             newErrors.name = "El nombre debe tener al menos 3 caracteres";
+        } else if (/^\d+$/.test(trimmed)) {
+            // No puede ser completamente numérico (ej: "1234")
+            newErrors.name = "El nombre no puede ser solo números";
+        } else if (!/[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]/.test(trimmed)) {
+            // Debe tener al menos una letra (no solo símbolos + dígitos)
+            newErrors.name = "El nombre debe contener al menos una letra";
+        } else if (/\d{5,}/.test(trimmed)) {
+            // No puede tener una secuencia de más de 4 dígitos consecutivos
+            newErrors.name =
+                "Los números en el nombre no pueden superar 4 dígitos consecutivos (ej: \"Top 10\" ✓, \"12345\" ✗)";
         } else {
             // Verificar si ya existe (excepto si estamos editando la misma)
             const exists = categories.find(
                 (c) =>
-                    c.name.toLowerCase() === formData.name.toLowerCase() &&
+                    c.name.toLowerCase() === trimmed.toLowerCase() &&
                     c.id !== editingCategory,
             );
             if (exists) {
@@ -274,7 +291,7 @@ export default function Categories() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, name: e.target.value })
                                     }
-                                    placeholder="Ej: Electrónica, Ropa, Deportes"
+                                    placeholder="Ej: Electrónica, Top 10, Sale 2026, Deportes"
                                     className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.name ? "border-red-500" : "border-slate-200"
                                         }`}
                                     autoFocus
