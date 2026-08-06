@@ -28,5 +28,17 @@
     "name": "Accesorios",
     "description": "Complementos varios",
     "productCount": 0
+  },
+  {
+    "name": "Niños",
+    "description": "ropa para niños",
+    "id": "08c7f268-20e2-4ffc-b36e-2f362effa439",
+    "productCount": 0
+  },
+  {
+    "name": "sddsa",
+    "description": "",
+    "id": "9",
+    "productCount": 0
   }
 ]

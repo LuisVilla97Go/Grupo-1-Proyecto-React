@@ -23,15 +23,12 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-  const [productToDelete, setProductToDelete] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
+  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
 
   // Obtener categorías únicas memoizadas
   const categories = useMemo(
     () => ["all", ...new Set(products.map((p) => p.category))],
-    [products],
+    [products]
   );
 
   const filteredProducts = useMemo(() => {
@@ -308,14 +305,12 @@ export default function Products() {
                         </button>
                         <button
                           onClick={() => {
-                            const { id, ...productCopy } = product;
+                            const { id: _, ...productCopy } = product;
                             productCopy.name = `${product.name} (Copia)`;
                             productCopy.sku = `${product.sku}-COPY`;
                             productCopy.status = "draft";
                             addProduct(productCopy);
-                            toast.success(
-                              `Producto "${product.name}" duplicado con éxito`,
-                            );
+                            toast.success(`Producto "${product.name}" duplicado con éxito`);
                           }}
                           className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition"
                           title="Duplicar"
@@ -368,12 +363,8 @@ export default function Products() {
                   <AlertTriangle className="w-5.5 h-5.5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-800">
-                    Eliminar Producto
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Esta acción es irreversible
-                  </p>
+                  <h3 className="text-base font-bold text-slate-800">Eliminar Producto</h3>
+                  <p className="text-xs text-slate-400">Esta acción es irreversible</p>
                 </div>
               </div>
               <button
@@ -385,12 +376,7 @@ export default function Products() {
             </div>
 
             <p className="text-xs text-slate-500 mb-6 leading-relaxed">
-              ¿Estás seguro de eliminar el producto{" "}
-              <span className="font-bold text-slate-800">
-                "{productToDelete.name}"
-              </span>{" "}
-              del inventario? Se borrará físicamente del catálogo y no podrá ser
-              restaurado.
+              ¿Estás seguro de eliminar el producto <span className="font-bold text-slate-800">"{productToDelete.name}"</span> del inventario? Se borrará físicamente del catálogo y no podrá ser restaurado.
             </p>
 
             {/* Acciones */}

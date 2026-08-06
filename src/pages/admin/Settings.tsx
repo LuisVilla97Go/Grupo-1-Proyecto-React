@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Store, MapPin, Package, Save, Receipt, ChevronDown } from "lucide-react";
+import { Store, MapPin, Package, Save, Receipt, ChevronDown, Pencil, AlertTriangle, X } from "lucide-react";
 import { toast } from "sonner";
 import { fetchFromLocalAPI } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
+import { useStore } from "../../contexts/StoreContext";
 
 // CONFIGURACIÓN DE MONEDAS Y SÍMBOLOS
 const currencySymbols: Record<string, string> = {
@@ -50,7 +52,7 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
             >
                 <div className="flex items-center gap-2 text-sm text-slate-800">
                     {selectedOption.code && (
-                        <img src={`https://flagcdn.com/w20/${selectedOption.code}.png`} alt="" className="w-5 h-auto rounded-xs" />
+                        <img src={`https://flagcdn.com/w20/${selectedOption.code}.png`} alt="" className="w-5 h-auto rounded-[2px]" />
                     )}
                     {selectedOption.label}
                 </div>
@@ -76,7 +78,7 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
                                     setIsOpen(false);
                                 }}
                             >
-                                <img src={`https://flagcdn.com/w20/${o.code}.png`} alt="" className="w-5 h-auto rounded-xs" />
+                                <img src={`https://flagcdn.com/w20/${o.code}.png`} alt="" className="w-5 h-auto rounded-[2px]" />
                                 {o.label}
                             </div>
                         );
@@ -89,8 +91,13 @@ function CustomSelect({ options, value, onChange }: { options: Option[], value: 
 
 // ESQUEMA DE VALIDACIÓN
 const settingsSchema = z.object({
-    storeName: z.string().min(3, "El nombre de la tienda es obligatorio"),
-    ruc: z.string().length(11, "El RUC debe tener exactamente 11 dígitos"),
+    storeName: z.string()
+        .min(3, "El nombre de la tienda es obligatorio")
+        .refine((val) => !/^\s/.test(val) && !/\s$/.test(val), "El nombre de la tienda no puede comenzar ni terminar con espacios"),
+    ruc: z.union([z.string(), z.number()])
+        .refine(val => !/^\s/.test(String(val)) && !/\s$/.test(String(val)), "El RUC no puede comenzar ni terminar con espacios")
+        .refine(val => /^\d{11}$/.test(String(val)), "El RUC debe tener exactamente 11 dígitos")
+        .transform(Number),
     email: z.string().email("Correo electrónico inválido"),
     currency: z.string(),
     timezone: z.string(),
@@ -104,7 +111,15 @@ const settingsSchema = z.object({
 type SettingsFormValues = z.infer<typeof settingsSchema>;
 
 export default function Settings() {
+    const { user } = useAuth();
+    const isAdmin = user?.role === "Administrador" || user?.role === "admin";
+    const { settings, updateSettings } = useStore();
+
     const [isSaving, setIsSaving] = useState(false);
+    const [isEditingStoreInfo, setIsEditingStoreInfo] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [pendingData, setPendingData] = useState<SettingsFormValues | null>(null);
+
     const [currencyOptions, setCurrencyOptions] = useState<Option[]>([]);
     const [timezoneOptions, setTimezoneOptions] = useState<Option[]>([]);
 
@@ -125,13 +140,14 @@ export default function Settings() {
         handleSubmit,
         watch,
         setValue,
+        reset,
         formState: { errors },
     } = useForm<SettingsFormValues>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         resolver: zodResolver(settingsSchema) as any,
         defaultValues: {
             storeName: "Mi Tienda Perú",
-            ruc: "20123456789",
+            ruc: 20123456789,
             email: "contacto@mitienda.pe",
             currency: "PEN",
             timezone: "America/Lima",
@@ -141,18 +157,33 @@ export default function Settings() {
         },
     });
 
+    useEffect(() => {
+        if (settings) {
+            reset(settings);
+        }
+    }, [settings, reset]);
+
     // Observar la moneda seleccionada para el preview
     // eslint-disable-next-line react-hooks/incompatible-library
     const selectedCurrency = watch("currency");
     const samplePrice = 150;
 
     const onSubmit = (data: SettingsFormValues) => {
-        setIsSaving(true);
-        setTimeout(() => {
-            localStorage.setItem("store_settings", JSON.stringify(data));
-            toast.success("Configuración guardada correctamente");
-            setIsSaving(false);
-        }, 800);
+        setPendingData(data);
+        setShowConfirmModal(true);
+    };
+
+    const confirmSave = () => {
+        if (pendingData) {
+            setIsSaving(true);
+            setTimeout(() => {
+                updateSettings(pendingData);
+                toast.success("Configuración actualizada correctamente");
+                setIsSaving(false);
+                setShowConfirmModal(false);
+                setIsEditingStoreInfo(false);
+            }, 500);
+        }
     };
 
     return (
@@ -168,14 +199,32 @@ export default function Settings() {
                                 Información de la Tienda
                             </h3>
                         </div>
-                        <button
-                            onClick={handleSubmit(onSubmit)}
-                            disabled={isSaving}
-                            className="bg-rose-600 text-white px-5 py-2.5 rounded-lg hover:bg-rose-700 font-medium flex items-center gap-2 transition shadow-sm shadow-rose-600/20 disabled:opacity-50"
-                        >
-                            <Save className="w-4 h-4" />
-                            {isSaving ? "Guardando..." : "Guardar Cambios"}
-                        </button>
+                        <div className="flex items-center gap-3">
+                            {isAdmin && !isEditingStoreInfo && (
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsEditingStoreInfo(true);
+                                    }}
+                                    className="bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200 font-medium flex items-center gap-2 transition"
+                                >
+                                    <Pencil className="w-4 h-4" />
+                                    Editar
+                                </button>
+                            )}
+                            {isEditingStoreInfo && (
+                                <button
+                                    type="button"
+                                    onClick={handleSubmit(onSubmit)}
+                                    disabled={isSaving}
+                                    className="bg-rose-600 text-white px-5 py-2 rounded-lg hover:bg-rose-700 font-medium flex items-center gap-2 transition shadow-sm shadow-rose-600/20 disabled:opacity-50"
+                                >
+                                    <Save className="w-4 h-4" />
+                                    {isSaving ? "Guardando..." : "Guardar Cambios"}
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Formulario */}
@@ -186,7 +235,8 @@ export default function Settings() {
                             </label>
                             <input
                                 {...register("storeName")}
-                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.storeName ? "border-red-500" : "border-slate-200"}`}
+                                disabled={!isEditingStoreInfo}
+                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 disabled:bg-slate-50 disabled:text-slate-500 ${errors.storeName ? "border-red-500" : "border-slate-200"}`}
                             />
                             {errors.storeName && (
                                 <p className="text-xs text-red-500">
@@ -201,9 +251,10 @@ export default function Settings() {
                             </label>
                             <input
                                 {...register("ruc")}
+                                disabled={!isEditingStoreInfo}
                                 placeholder="20123456789"
                                 maxLength={11}
-                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.ruc ? "border-red-500" : "border-slate-200"}`}
+                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 disabled:bg-slate-50 disabled:text-slate-500 ${errors.ruc ? "border-red-500" : "border-slate-200"}`}
                             />
                             <p className="text-xs text-slate-500">
                                 Necesario para emitir boletas y facturas electrónicas.
@@ -220,7 +271,8 @@ export default function Settings() {
                             <input
                                 {...register("email")}
                                 type="email"
-                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 ${errors.email ? "border-red-500" : "border-slate-200"}`}
+                                disabled={!isEditingStoreInfo}
+                                className={`w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 disabled:bg-slate-50 disabled:text-slate-500 ${errors.email ? "border-red-500" : "border-slate-200"}`}
                             />
                             {errors.email && (
                                 <p className="text-xs text-red-500">{errors.email.message}</p>
@@ -229,7 +281,7 @@ export default function Settings() {
                     </div>
                 </div>
 
-                {/* SECCIÓN 2: MONEDA Y LOCALIZACIÓN */}
+                {/* SECCIÓN 2: MONEDA Y LOCALIZACIÓN*/}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
                         <MapPin className="w-5 h-5 text-rose-600" />
@@ -366,7 +418,7 @@ export default function Settings() {
                                     {...register("igvPercentage")}
                                     className="w-full px-3 py-2.5 pr-10 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"
                                 />
-                                <span className="absolute right-3 top-8.5 text-sm text-slate-500">
+                                <span className="absolute right-3 top-[34px] text-sm text-slate-500">
                                     %
                                 </span>
                             </div>
@@ -374,6 +426,51 @@ export default function Settings() {
                     </div>
                 </div>
             </form>
+
+            {/* MODAL CONFIRMACIÓN */}
+            {showConfirmModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <AlertTriangle className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-800">Confirmar Cambios</h3>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmModal(false)}
+                                className="p-1 hover:bg-slate-100 rounded-lg text-slate-400"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <p className="text-sm text-slate-500 mb-6">
+                            ¿Estás seguro de actualizar la información de la tienda? Esto afectará los datos mostrados en los comprobantes y en toda la plataforma.
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmModal(false)}
+                                className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-lg text-sm font-semibold text-slate-600 transition"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                onClick={confirmSave}
+                                disabled={isSaving}
+                                className="px-6 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-sm font-semibold transition shadow-lg shadow-rose-600/20 disabled:opacity-50 flex items-center gap-2"
+                            >
+                                {isSaving ? "Guardando..." : "Sí, actualizar"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -7,13 +7,7 @@ import {
   type ReactNode,
 } from "react";
 
-import {
-  type Product,
-  type Category,
-  type Sale,
-  type CartItem,
-  type Notification,
-} from "../types";
+import { type Product, type Category, type Sale, type CartItem, type Notification, type StoreSettings } from "../types";
 import { useAuth } from "./AuthContext";
 import { toast } from "sonner";
 import { fetchFromLocalAPI, saveToLocalAPI } from "../services/api";
@@ -37,6 +31,8 @@ interface StoreContextType {
   notifications: Notification[];
   markNotificationAsRead: (id: string) => void;
   clearAllNotifications: () => void;
+  settings: StoreSettings | null;
+  updateSettings: (settings: StoreSettings) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -47,6 +43,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [sales, setSales] = useState<Sale[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [settings, setSettings] = useState<StoreSettings | null>(null);
   const { user } = useAuth();
 
   // Cargar datos (Productos, Categorías, Ventas) desde localStorage o sembrarlos de la API
@@ -90,7 +87,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
       // 4. Fetch Notifications
       const savedNotifs = localStorage.getItem("dash_notifs");
-      if (savedNotifs && savedNotifs !== "[]") {
+      if (savedNotifs !== null) {
         setNotifications(JSON.parse(savedNotifs));
       } else {
         const notifData = await fetchFromLocalAPI("notifications.json");
@@ -104,6 +101,18 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       const savedCart = localStorage.getItem("dash_cart");
       if (savedCart) {
         setCart(JSON.parse(savedCart));
+      }
+
+      // 6. Fetch Settings
+      const savedSettings = localStorage.getItem("store_settings");
+      if (savedSettings) {
+        setSettings(JSON.parse(savedSettings));
+      } else {
+        const settingsData = await fetchFromLocalAPI("settings.json");
+        if (settingsData) {
+          setSettings(settingsData);
+          localStorage.setItem("store_settings", JSON.stringify(settingsData));
+        }
       }
     };
 
@@ -127,6 +136,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("dash_cart", JSON.stringify(newCart));
   };
 
+  const updateSettings = (newSettings: StoreSettings) => {
+    setSettings(newSettings);
+    localStorage.setItem("store_settings", JSON.stringify(newSettings));
+    saveToLocalAPI("save-settings", newSettings);
+  };
+
   const addProduct = (product: Omit<Product, "id">) => {
     const maxId = products.reduce((max, p) => {
       if (p.id.startsWith("prod-")) {
@@ -142,7 +157,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   const updateProduct = (id: string, updated: Partial<Product>) => {
     const updatedList = products.map((p) =>
-      p.id === id ? { ...p, ...updated } : p,
+      p.id === id ? { ...p, ...updated } : p
     );
     saveProducts(updatedList);
   };
@@ -167,7 +182,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   const updateCategory = (id: string, updated: Partial<Category>) => {
     const updatedList = categories.map((c) =>
-      c.id === id ? { ...c, ...updated } : c,
+      c.id === id ? { ...c, ...updated } : c
     );
     saveCategories(updatedList);
   };
@@ -199,9 +214,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
     // 2. Decrementar el stock de los productos comprados
     const updatedProducts = products.map((p) => {
-      const purchasedItem = saleData.items.find(
-        (item) => item.productId === p.id,
-      );
+      const purchasedItem = saleData.items.find((item) => item.productId === p.id);
       if (purchasedItem) {
         return {
           ...p,
@@ -236,9 +249,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const markNotificationAsRead = (id: string) => {
-    const updated = notifications.map((n) =>
-      n.id === id ? { ...n, isRead: true } : n,
-    );
+    const updated = notifications.map(n => n.id === id ? { ...n, isRead: true } : n);
     setNotifications(updated);
     localStorage.setItem("dash_notifs", JSON.stringify(updated));
     saveToLocalAPI("save-notifications", updated);
@@ -257,16 +268,12 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    const existingIndex = cart.findIndex(
-      (item) => item.productId === product.id,
-    );
+    const existingIndex = cart.findIndex((item) => item.productId === product.id);
 
     if (existingIndex > -1) {
       const currentQty = cart[existingIndex].quantity;
       if (currentQty >= product.stock) {
-        toast.warning(
-          `Lo sentimos, solo quedan ${product.stock} unidades de este producto.`,
-        );
+        toast.warning(`Lo sentimos, solo quedan ${product.stock} unidades de este producto.`);
         return;
       }
       const updatedCart = [...cart];
@@ -281,10 +288,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         quantity: 1,
         category: product.category,
         stockLimit: product.stock,
-        image:
-          product.images && product.images.length > 0
-            ? product.images[0]
-            : undefined,
+        image: product.images && product.images.length > 0 ? product.images[0] : undefined,
       };
       saveCart([...cart, newItem]);
       toast.success(`"${product.name}" agregado al carrito.`);
@@ -297,9 +301,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         if (item.productId === productId) {
           const newQty = item.quantity + amount;
           if (newQty > item.stockLimit) {
-            toast.warning(
-              `Solo quedan ${item.stockLimit} unidades de este producto.`,
-            );
+            toast.warning(`Solo quedan ${item.stockLimit} unidades de este producto.`);
             return item;
           }
           if (newQty > 0) {
@@ -344,6 +346,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         notifications,
         markNotificationAsRead,
         clearAllNotifications,
+        settings,
+        updateSettings,
       }}
     >
       {children}
