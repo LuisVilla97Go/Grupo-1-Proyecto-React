@@ -87,7 +87,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
       // 4. Fetch Notifications
       const savedNotifs = localStorage.getItem("dash_notifs");
-      if (savedNotifs && savedNotifs !== "[]") {
+      if (savedNotifs !== null) {
         setNotifications(JSON.parse(savedNotifs));
       } else {
         const notifData = await fetchFromLocalAPI("notifications.json");
