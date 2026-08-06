@@ -136,7 +136,7 @@ export default function Congrats({ isCollapsed = false, isMobile = false }: Cong
             • SECCIÓN OCULTA •
           </span>
           <h4 className="text-sm text-slate-200 font-semibold text-center tracking-wide mt-1">
-            Presione aquí, profe
+            Presione aquí, Profe
           </h4>
         </div>
 
