@@ -53,18 +53,18 @@ function EasterEggModal({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md"
+      className="fixed inset-0 z-99999 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md"
       onClick={onClose}
     >
       {/* Contenedor del Modal elevado a 100001 para estar sobre el confetti (100000) */}
       <div
-        className="relative z-[100001] flex flex-col md:flex-row bg-transparent rounded-3xl max-w-[70vw] min-h-[50vh] w-full overflow-hidden shadow-2xl"
+        className="relative z-100001 flex flex-col md:flex-row bg-transparent rounded-3xl max-w-[70vw] min-h-[50vh] w-full overflow-hidden shadow-2xl"
         style={{ animation: "zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Contenedor de la imagen (Fondo transparente/blur) */}
         <div className="flex-1 bg-white/5 flex items-center justify-center p-8 md:p-12 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-blue-500/10" />
+          <div className="absolute inset-0 bg-linear-to-br from-rose-500/10 to-blue-500/10" />
           <img
             src="/images/gato-donatto.png"
             alt="Gato Donatto"
@@ -129,10 +129,10 @@ export default function Congrats({ isCollapsed = false, isMobile = false }: Cong
     <>
       <div className="px-4 py-5 mx-3 mb-4 mt-2 rounded-2xl bg-slate-900/60 border border-white/10 flex flex-col items-center gap-4 relative overflow-hidden group">
         {/* Fondo animado sutil */}
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-rose-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
         <div className="relative z-10 flex flex-col items-center gap-1 w-full">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400">
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-transparent bg-clip-text bg-linear-to-r from-rose-400 to-pink-400">
             • SECCIÓN OCULTA •
           </span>
           <h4 className="text-sm text-slate-200 font-semibold text-center tracking-wide mt-1">
